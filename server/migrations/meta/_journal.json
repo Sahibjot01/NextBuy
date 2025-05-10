@@ -71,6 +71,55 @@
       "when": 1744084688506,
       "tag": "0009_bizarre_patriot",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1745041756364,
+      "tag": "0010_happy_rachel_grey",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1745042646046,
+      "tag": "0011_clever_lockjaw",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1745043238940,
+      "tag": "0012_solid_nocturne",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1746057182242,
+      "tag": "0013_breezy_viper",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1746426514699,
+      "tag": "0014_mute_snowbird",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1746430148042,
+      "tag": "0015_bent_caretaker",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1746684099432,
+      "tag": "0016_real_puppet_master",
+      "breakpoints": true
     }
   ]
 }

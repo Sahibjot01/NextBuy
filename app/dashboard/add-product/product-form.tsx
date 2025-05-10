@@ -25,12 +25,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { addProduct } from "@/server/action/add-product";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { getProduct } from "@/server/action/get-product";
+import { useEffect } from "react";
 
 export default function ProductForm() {
   const form = useForm<zProductSchema>({
     resolver: zodResolver(ProductSchema),
-    mode: "onSubmit",
+    mode: "onChange",
     defaultValues: {
       title: "",
       description: "",
@@ -38,31 +40,77 @@ export default function ProductForm() {
     },
   });
   const router = useRouter();
+  const id = useSearchParams().get("id");
+  const editMode = id ? true : false;
+
+  //call this fn if editMode is true in useEffect
+  const checkProduct = async (id: number) => {
+    if (editMode) {
+      const data = await getProduct(id);
+      if (data.error) {
+        toast.error(data.error, {
+          id: "fetch-product",
+        });
+        router.push("/dashboard/products");
+        return;
+      }
+      if (data.success) {
+        // form.setValue("title", data.success.title);
+        // form.setValue("description", data.success.description);
+        // form.setValue("price", data.success.price);
+        // form.setValue("id", data.success.id);
+        form.reset({
+          title: data.success.title,
+          description: data.success.description,
+          price: data.success.price,
+          id: data.success.id,
+        });
+      }
+    }
+  };
+  useEffect(() => {
+    if (editMode) {
+      checkProduct(parseInt(id!));
+    }
+  }, []);
+
   const { execute, status } = useAction(addProduct, {
     onSuccess: ({ data }) => {
-      console.log("data", data);
       if (data?.success) {
-        toast.success("Product created successfully", {
+        toast.success(data.success, {
           id: "creating-product",
         });
         router.push("/dashboard/products");
       }
       if (data?.error) {
-        toast.error("Failed to create product", {
+        toast.error(data.error, {
           id: "creating-product",
         });
       }
     },
     onError: (error) => {
-      console.log("error", error);
-      toast.error("Failed to create product", {
-        id: "creating-product",
-      });
+      if (!editMode) {
+        toast.error("Failed to create product", {
+          id: "creating-product",
+        });
+      }
+      if (editMode) {
+        toast.error("Failed to update product", {
+          id: "creating-product",
+        });
+      }
     },
     onExecute: () => {
-      toast.loading("Creating product...", {
-        id: "creating-product",
-      });
+      if (!editMode) {
+        toast.loading("Creating product...", {
+          id: "creating-product",
+        });
+      }
+      if (editMode) {
+        toast.loading("Updating product...", {
+          id: "creating-product",
+        });
+      }
     },
   });
 
@@ -72,8 +120,12 @@ export default function ProductForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Card Title</CardTitle>
-        <CardDescription>Card Description</CardDescription>
+        <CardTitle>{editMode ? "Edit Product" : "Create Product"}</CardTitle>
+        <CardDescription>
+          {editMode
+            ? "Make changes to existing product"
+            : "Add a brand new product"}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -138,7 +190,7 @@ export default function ProductForm() {
               }
               type="submit"
             >
-              Submit
+              {editMode ? "Save Changes" : "Create Product"}
             </Button>
           </form>
         </Form>

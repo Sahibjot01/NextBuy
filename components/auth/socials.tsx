@@ -12,7 +12,6 @@ export default function Socials() {
         className="flex gap-4 w-full"
         onClick={() =>
           signIn("google", {
-            redirect: false,
             redirectTo: "/",
           })
         }
@@ -24,7 +23,6 @@ export default function Socials() {
         className="flex gap-4 w-full"
         onClick={() =>
           signIn("github", {
-            redirect: false,
             redirectTo: "/",
           })
         }

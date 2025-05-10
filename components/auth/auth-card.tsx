@@ -22,7 +22,7 @@ const AuthCard = ({
   showSocials,
 }: AuthCardProps) => {
   return (
-    <Card className="max-w-md">
+    <Card className="max-w-md w-full">
       <CardHeader>
         <CardTitle>{cardtitle}</CardTitle>
       </CardHeader>

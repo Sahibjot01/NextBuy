@@ -7,6 +7,7 @@ import { eq } from "drizzle-orm";
 import bcypt from "bcrypt";
 import { generateEmailVerificationToken } from "./token";
 import { sendVerificationEmail } from "./email";
+import Stripe from "stripe";
 
 const actionClient = createSafeActionClient();
 
@@ -34,11 +35,28 @@ export const emailRegister = actionClient
       return { error: "email already exists" };
     }
     //logic when user does not exist
-    const newUser = await db.insert(users).values({
+    const newUser = await db
+      .insert(users)
+      .values({
+        email,
+        name,
+        password: hashedPassword,
+      })
+      .returning();
+
+    //create stripe customer
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: "2025-04-30.basil",
+    });
+    const customer = await stripe.customers.create({
       email,
       name,
-      password: hashedPassword,
     });
+
+    await db
+      .update(users)
+      .set({ customerID: customer.id })
+      .where(eq(users.id, newUser[0].id));
 
     //send verification email
     const verificationToken = await generateEmailVerificationToken(email);

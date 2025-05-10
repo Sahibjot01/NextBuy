@@ -20,7 +20,7 @@ export function DashboardNav({
               <motion.li whileTap={{ scale: 0.95 }} key={link.path}>
                 <Link
                   className={cn(
-                    "flex flex-col gap-1 relative items-center h[3px] ",
+                    "flex flex-col gap-1 relative items-center",
                     pathName == link.path && "text-primary"
                   )}
                   href={link.path}
