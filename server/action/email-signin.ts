@@ -87,7 +87,7 @@ export const emailSignin = actionClient
       return { success: "User Signed In!" };
     } catch (error) {
       if (error instanceof AuthError) {
-        switch (error.type) {
+        switch (error.message) {
           case "CredentialsSignin":
             return { error: "Email or Password Incorrect" };
 

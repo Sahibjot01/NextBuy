@@ -1,10 +1,12 @@
 import { EmailVerificationForm } from "@/components/auth/email-verification-form";
 import AuthWrapper from "@/components/wrapper/auth-wrapper";
-
+import { Suspense } from "react";
 export default function NewVerification() {
   return (
     <AuthWrapper>
-      <EmailVerificationForm />
+      <Suspense fallback={<div>Loading...</div>}>
+        <EmailVerificationForm />
+      </Suspense>
     </AuthWrapper>
   );
 }
