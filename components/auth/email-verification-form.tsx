@@ -25,10 +25,9 @@ export const EmailVerificationForm = () => {
       return;
     }
     //verify token
-    console.log("Verifying token");
 
     const response = await verifyEmailToken(token);
-    console.log(response);
+    // console.log(response);
 
     if (response.error) {
       setError(response.error);

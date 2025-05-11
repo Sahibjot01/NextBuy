@@ -19,7 +19,7 @@ export const ourFileRouter = {
       maxFileSize: "16MB",
     },
   }).onUploadComplete(async ({ metadata, file }) => {
-    console.log(file);
+    // console.log(file);
   }),
 } satisfies FileRouter;
 

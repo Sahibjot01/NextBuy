@@ -21,8 +21,6 @@ export default function Products({ variants }: productTypes) {
     if (tag) {
       return variants.filter((variant) =>
         variant.variantTags.some((variantTag) => {
-          console.log(variantTag.tag);
-
           return variantTag.tag.toLowerCase().trim() === tag.toLowerCase();
         })
       );
