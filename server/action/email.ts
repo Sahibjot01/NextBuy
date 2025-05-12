@@ -6,64 +6,93 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY);
 const domain = getBaseURL();
 
+// ✅ reusable email template
+const emailTemplate = ({
+  title,
+  message,
+  ctaText,
+  ctaLink,
+}: {
+  title: string;
+  message: string;
+  ctaText?: string;
+  ctaLink?: string;
+}) => {
+  return `
+    <div style="font-family: Arial, sans-serif; color: #333; padding: 20px;">
+      <h2 style="color: #3b82f6;">${title}</h2>
+      <p>${message}</p>
+      ${
+        ctaLink
+          ? `<a href="${ctaLink}" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #3b82f6; color: white; text-decoration: none; border-radius: 5px;">${ctaText}</a>`
+          : ""
+      }
+      <p style="margin-top: 40px; font-size: 12px; color: #888;">&copy; ${new Date().getFullYear()} NextBuy</p>
+    </div>
+  `;
+};
+
+const FROM_EMAIL = "NextBuy <no-reply@nextbuyapp.store>";
+
+// 2FA Email
 export const sendTwoFactorEmail = async (
   email: string,
   verificationToken: string
 ) => {
   const { data, error } = await resend.emails.send({
-    from: "Acme <onboarding@resend.dev>",
+    from: FROM_EMAIL,
     to: email,
-    subject: "NextBuy - Your 2FA code",
-    html: `<p>your 2FA code is <strong>${verificationToken}</strong></p>`,
+    subject: "NextBuy - Your 2FA Code",
+    html: emailTemplate({
+      title: "Your 2FA Code",
+      message: `Your 2FA code is <strong>${verificationToken}</strong>. Please enter this code to continue.`,
+    }),
   });
 
-  if (error) {
-    return console.log(error);
-  }
-
-  if (data) {
-    return data;
-  }
+  if (error) console.error(error);
+  return data;
 };
 
+// Email Verification
 export const sendVerificationEmail = async (
   email: string,
   verificationToken: string
 ) => {
   const confirmationLink = `${domain}/auth/new-verification?token=${verificationToken}`;
   const { data, error } = await resend.emails.send({
-    from: "Acme <onboarding@resend.dev>",
+    from: FROM_EMAIL,
     to: email,
-    subject: "NextBuy - Verify your email",
-    html: `<p>verify your email by clicking <a href="${confirmationLink}">here</a></p>`,
+    subject: "NextBuy - Verify Your Email",
+    html: emailTemplate({
+      title: "Verify Your Email",
+      message: `Click the button below to verify your email address and activate your NextBuy account.`,
+      ctaText: "Verify Email",
+      ctaLink: confirmationLink,
+    }),
   });
 
-  if (error) {
-    return console.log(error);
-  }
-
-  if (data) {
-    return data;
-  }
+  if (error) console.error(error);
+  return data;
 };
 
+// Password Reset
 export const sendPasswordResetEmail = async (
   email: string,
   verificationToken: string
 ) => {
-  const confirmationLink = `${domain}/auth/new-password?token=${verificationToken}`;
+  const resetLink = `${domain}/auth/new-password?token=${verificationToken}`;
   const { data, error } = await resend.emails.send({
-    from: "Acme <onboarding@resend.dev>",
+    from: FROM_EMAIL,
     to: email,
-    subject: "NextBuy - Reset your password",
-    html: `<p>Change your password by clicking <a href="${confirmationLink}">here</a></p>`,
+    subject: "NextBuy - Reset Your Password",
+    html: emailTemplate({
+      title: "Reset Your Password",
+      message: `It seems like you requested a password reset. Click the button below to reset your password.`,
+      ctaText: "Reset Password",
+      ctaLink: resetLink,
+    }),
   });
 
-  if (error) {
-    return console.log(error);
-  }
-
-  if (data) {
-    return data;
-  }
+  if (error) console.error(error);
+  return data;
 };
