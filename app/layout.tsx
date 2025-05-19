@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/navigation/nav";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "@/components/ui/sonner-toaster";
+import { Analytics } from "@vercel/analytics/next";
 
 //component
 
@@ -37,6 +38,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${roboto.className} antialiased`}
       >
+        <Analytics />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
