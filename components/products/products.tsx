@@ -61,8 +61,8 @@ export default function Products({ variants }: productTypes) {
                       : "Out of stock"
                   : "Inventory tracked"}
               </p>
-              <p className="mt-3 text-xs uppercase tracking-[0.2em] text-muted-foreground/80">
-                Tap to view details
+              <p className="mt-3 text-xs font-medium tracking-normal text-muted-foreground/80">
+                View details
               </p>
             </div>
             <div>

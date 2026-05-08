@@ -114,7 +114,7 @@ export default function RegisterForm() {
             <FormError message={error} />
             <FormSuccess message={success} />
             <Button variant={"link"} size={"sm"} className="px-0" asChild>
-              <Link href="/auth/reset">forgot Password</Link>
+              <Link href="/auth/reset">Forgot password?</Link>
             </Button>
           </div>
           <Button
