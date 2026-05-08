@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NextBuy
+
+NextBuy is a full-stack Next.js e-commerce demo with product browsing, search, auth, reviews, Stripe checkout, admin product management, and inventory-aware transactions.
+
+## What it shows
+- App Router architecture with Server Components and Server Actions
+- Stripe checkout with webhook-driven order updates
+- Auth with credentials and OAuth
+- Algolia product search and tag filtering
+- Inventory tracked at the variant level
+- Admin dashboard for product management and analytics
+- Review and rating system
+- CI smoke test and production-oriented checks
+
+## Tech Stack
+- Next.js 15
+- React 19
+- TypeScript
+- Drizzle ORM
+- PostgreSQL
+- Stripe
+- NextAuth v5
+- Algolia
+- Zustand
+- Tailwind CSS
+- Radix UI
+
+## Features
+- Searchable product catalog
+- Product variants with images, tags, and color options
+- Cart and checkout flow
+- Stripe payment intent + webhook flow
+- Order creation with transactional stock updates
+- User authentication and social login
+- Admin dashboard for products, orders, analytics, and settings
+- Review system with ratings and comments
+- Home page showcase with a more polished storefront layout
+
+## Environment Variables
+Create a `.env.local` file with the values your app needs:
+
+```bash
+AUTH_SECRET=
+AUTH_URL=
+POSTGRES_URL=
+NEXT_PUBLIC_PUBLISHABLE_KEY=
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GITHUB_ID=
+GITHUB_SECRET=
+RESEND_API_KEY=
+NEXT_PUBLIC_ALGOLIA_ID=
+ALGOLIA_ADMIN=
+NEXT_PUBLIC_UPLOADTHING_APP_ID=
+UPLOADTHING_SECRET=
+```
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
+npm run db:push
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000` after the dev server starts.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
+- `npm run dev` - start the development server
+- `npm run build` - build the app for production
+- `npm run start` - run the production server
+- `npm run lint` - lint the project
+- `npm test` - run the smoke test
+- `npm run db:generate` - generate Drizzle migrations
+- `npm run db:push` - push the schema to the database
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Inventory and Transactions
+Inventory is stored on each product variant through the `stock` field. Checkout validates available stock before creating a payment intent, and order creation decrements stock inside a database transaction so overselling is prevented.
 
-## Learn More
+## CI
+GitHub Actions runs a simple smoke test plus a build on every push and pull request. It is intentionally lightweight right now, but it proves the project can compile and run in CI.
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment
+If you deploy on Vercel, connect the GitHub repo and add all environment variables in the Vercel dashboard. The deployment will fail without the required Stripe, auth, Algolia, and database values.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Notes
+This repository is intended to show full-stack product work: auth, checkout, transactions, dashboard flows, and safer server-side handling.
