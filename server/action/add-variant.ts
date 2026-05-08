@@ -20,6 +20,7 @@ const client = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_ID!,
   process.env.ALGOLIA_ADMIN!
 );
+import { auth } from "../auth";
 export const createVariant = actionClient
   .schema(variantSchema)
   .action(
@@ -32,8 +33,13 @@ export const createVariant = actionClient
         productType,
         tags,
         variantImages: variantimgs,
+        stock,
       },
     }) => {
+      const user = await auth();
+      if (!user || user.user.role !== "admin") {
+        return { error: "Unauthorized" };
+      }
       const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
       const dbPool = drizzle(pool);
 
@@ -53,6 +59,7 @@ export const createVariant = actionClient
               color,
               productType,
               updated: new Date(),
+              stock, // Update stock if provided
             })
             .where(eq(productVariants.id, id));
 
@@ -104,6 +111,7 @@ export const createVariant = actionClient
               productType,
               productID,
               updated: new Date(),
+              stock, // Include stock when creating a new variant
             })
             .returning();
 

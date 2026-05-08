@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Card } from "../ui/card";
 import formatPrice from "@/lib/formatPrice";
 import { useMemo, useState } from "react";
+import DOMPurify from "isomorphic-dompurify";
 import { motion, AnimatePresence } from "motion/react";
 
 export default function Algolia() {
@@ -98,13 +99,17 @@ function Hit({
           <p
             className="text-sm "
             dangerouslySetInnerHTML={{
-              __html: hit._highlightResult.title.value,
+              __html: DOMPurify.sanitize(
+                hit._highlightResult.title.value || "",
+              ),
             }}
           ></p>
           <p
             className="text-sm "
             dangerouslySetInnerHTML={{
-              __html: hit._highlightResult.productType.value,
+              __html: DOMPurify.sanitize(
+                hit._highlightResult.productType.value || "",
+              ),
             }}
           ></p>
           <p className="font-medium">{formatPrice(hit.price)}</p>

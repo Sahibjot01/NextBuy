@@ -1,0 +1,1 @@
+ALTER TABLE "productVariants" ADD COLUMN "stock" integer DEFAULT 100;

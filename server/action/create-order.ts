@@ -4,7 +4,8 @@ import { actionClient } from ".";
 import { auth } from "../auth";
 import { Pool } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-serverless";
-import { orderProducts, orders } from "../schema";
+import { orderProducts, orders, productVariants } from "../schema";
+import { eq } from "drizzle-orm";
 
 export const createOrder = actionClient
   .schema(orderSchema)
@@ -19,6 +20,27 @@ export const createOrder = actionClient
       const dbPool = drizzle(pool);
 
       const orderID = await dbPool.transaction(async (tx) => {
+        // validate stock and decrement inside transaction
+        for (const p of products) {
+          const variant = await tx
+            .select()
+            .from(productVariants)
+            .where(eq(productVariants.id, p.variantID))
+            .limit(1)
+            .then((res) => res[0]);
+          if (!variant) throw new Error("Invalid product variant");
+          const available = variant.stock;
+          if (typeof available === "number" && available < p.quantity) {
+            throw new Error(`Not enough stock for variant ${p.variantID}`);
+          }
+          if (typeof available === "number") {
+            await tx
+              .update(productVariants)
+              .set({ stock: available - p.quantity })
+              .where(eq(productVariants.id, p.variantID));
+          }
+        }
+
         //create order
         const order = await tx
           .insert(orders)

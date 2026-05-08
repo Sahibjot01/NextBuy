@@ -9,6 +9,8 @@ import { db } from "..";
 import { eq } from "drizzle-orm";
 import { productVariants } from "../schema";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+// Simple in-memory rate limiter (per-user). Suitable for demo; replace with Redis/Upstash in prod.
+const _rateLimit = new Map<string, { count: number; reset: number }>();
 
 export const createPaymentIntent = actionClient
   .schema(PaymentIntentSchema)
@@ -19,6 +21,22 @@ export const createPaymentIntent = actionClient
       console.log("User not logged in");
 
       return { error: "You must be logged in to create a payment" };
+    }
+    // rate limit: 10 requests per minute per user
+    try {
+      const key = user.user.id;
+      const entry = _rateLimit.get(key) ?? { count: 0, reset: Date.now() + 60_000 };
+      if (Date.now() > entry.reset) {
+        entry.count = 0;
+        entry.reset = Date.now() + 60_000;
+      }
+      entry.count += 1;
+      _rateLimit.set(key, entry);
+      if (entry.count > 10) {
+        return { error: "Too many payment attempts, please wait a minute." };
+      }
+    } catch (e) {
+      // noop - fail open
     }
     //check if cart is valid
     if (!cart || !Array.isArray(cart) || cart.length === 0) {
@@ -46,6 +64,13 @@ export const createPaymentIntent = actionClient
       });
       if (!variant) {
         return { error: "Invalid product information" };
+      }
+      // check stock if available
+      if (typeof (variant as any).stock === "number") {
+        const available = (variant as any).stock as number;
+        if (item.quantity > available) {
+          return { error: `Only ${available} items available for this product` };
+        }
       }
       //use database price
       const itemTotal = variant.product.price * item.quantity;

@@ -16,7 +16,7 @@ import type { AdapterAccountType } from "next-auth/adapters";
 import { createId } from "@paralleldrive/cuid2";
 import { relations } from "drizzle-orm";
 
-const connectionString = "postgres://postgres:postgres@localhost:5432/drizzle";
+const connectionString = process.env.POSTGRES_URL ?? "postgres://postgres:postgres@localhost:5432/drizzle";
 const pool = postgres(connectionString, { max: 1 });
 
 export const db = drizzle(pool);
@@ -137,6 +137,7 @@ export const productVariants = pgTable("productVariants", {
   color: text("color").notNull(),
   productType: text("productType").notNull(),
   updated: timestamp("updated").defaultNow(),
+  stock: integer("stock").default(100),
   productID: serial("productID")
     .notNull()
     .references(() => products.id, { onDelete: "cascade" }),

@@ -29,4 +29,5 @@ export const variantSchema = z.object({
       })
     )
     .min(1, { message: "You must provide atleast one image" }),
+  stock: z.number().int().min(0).optional(),
 });

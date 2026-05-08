@@ -86,12 +86,13 @@ export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
         })),
       });
 
+      const returnUrl = `${window.location.origin}/success`;
       const { error } = await stripe.confirmPayment({
         elements,
         clientSecret: data.data.success.clientSecretID!,
         redirect: "if_required",
         confirmParams: {
-          return_url: "http://localhost:3000/success",
+          return_url: returnUrl,
           receipt_email: data.data.success.user as string,
         },
       });

@@ -1,6 +1,7 @@
 "use server";
 
 import ProductType from "@/components/products/product-type";
+import DOMPurify from "isomorphic-dompurify";
 import { db } from "@/server";
 import { productVariants } from "@/server/schema";
 import { eq } from "drizzle-orm";
@@ -79,7 +80,9 @@ export default async function Page({
               {formatedPrice(variant.product.price)}
             </p>
             <div
-              dangerouslySetInnerHTML={{ __html: variant.product.description }}
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(variant.product.description || ""),
+              }}
             ></div>
             <p className="text-secondary-foreground font-medium my-2">
               Available Colors

@@ -120,6 +120,13 @@
       "when": 1746684099432,
       "tag": "0016_real_puppet_master",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1778282228020,
+      "tag": "0017_add-stock-to-product-variants",
+      "breakpoints": true
     }
   ]
 }

@@ -6,6 +6,7 @@ import { productVariants } from "../schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { algoliasearch } from "algoliasearch";
+import { auth } from "../auth";
 //for algolia
 const client = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_ID!,
@@ -14,11 +15,15 @@ const client = algoliasearch(
 export const deleteVariant = actionClient
   .schema(z.object({ id: z.number() }))
   .action(async ({ parsedInput: { id } }) => {
+    const user = await auth();
+    if (!user || user.user.role !== "admin") {
+      return { error: "Unauthorized" };
+    }
     const deletedVariant = await db
       .delete(productVariants)
       .where(eq(productVariants.id, id))
       .returning();
-    if (!deleteVariant) {
+    if (!deletedVariant) {
       return { error: "Variant with this ID not found" };
     }
     //delete from algolia

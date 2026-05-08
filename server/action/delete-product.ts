@@ -5,6 +5,7 @@ import { db } from "..";
 import { products } from "../schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { auth } from "../auth";
 
 export const deleteProduct = actionClient
   .schema(
@@ -13,6 +14,10 @@ export const deleteProduct = actionClient
     })
   )
   .action(async ({ parsedInput: { id } }) => {
+    const user = await auth();
+    if (!user || user.user.role !== "admin") {
+      return { error: "Unauthorized" };
+    }
     const product = await db
       .delete(products)
       .where(eq(products.id, id))

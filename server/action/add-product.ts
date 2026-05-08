@@ -1,4 +1,5 @@
 "use server";
+import { auth } from "../auth";
 import { ProductSchema } from "@/types/product-schema";
 import { createSafeActionClient } from "next-safe-action";
 import { db } from "..";
@@ -11,6 +12,10 @@ const actionClient = createSafeActionClient();
 export const addProduct = actionClient
   .schema(ProductSchema)
   .action(async ({ parsedInput: { id, title, description, price } }) => {
+    const user = await auth();
+    if (!user || user.user.role !== "admin") {
+      return { error: "Unauthorized" };
+    }
     try {
       if (id) {
         //if id is present, update the product
