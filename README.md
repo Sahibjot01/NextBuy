@@ -3,6 +3,7 @@
 NextBuy is a full-stack Next.js e-commerce demo with product browsing, search, auth, reviews, Stripe checkout, admin product management, and inventory-aware transactions.
 
 ## What it shows
+
 - App Router architecture with Server Components and Server Actions
 - Stripe checkout with webhook-driven order updates
 - Auth with credentials and OAuth
@@ -13,6 +14,7 @@ NextBuy is a full-stack Next.js e-commerce demo with product browsing, search, a
 - CI smoke test and production-oriented checks
 
 ## Tech Stack
+
 - Next.js 15
 - React 19
 - TypeScript
@@ -26,6 +28,7 @@ NextBuy is a full-stack Next.js e-commerce demo with product browsing, search, a
 - Radix UI
 
 ## Features
+
 - Searchable product catalog
 - Product variants with images, tags, and color options
 - Cart and checkout flow
@@ -37,6 +40,7 @@ NextBuy is a full-stack Next.js e-commerce demo with product browsing, search, a
 - Home page showcase with a more polished storefront layout
 
 ## Environment Variables
+
 Create a `.env.local` file with the values your app needs:
 
 ```bash
@@ -68,6 +72,7 @@ npm run dev
 Open `http://localhost:3000` after the dev server starts.
 
 ## Scripts
+
 - `npm run dev` - start the development server
 - `npm run build` - build the app for production
 - `npm run start` - run the production server
@@ -77,13 +82,17 @@ Open `http://localhost:3000` after the dev server starts.
 - `npm run db:push` - push the schema to the database
 
 ## Inventory and Transactions
+
 Inventory is stored on each product variant through the `stock` field. Checkout validates available stock before creating a payment intent, and order creation decrements stock inside a database transaction so overselling is prevented.
 
 ## CI
+
 GitHub Actions runs a simple smoke test plus a build on every push and pull request. It is intentionally lightweight right now, but it proves the project can compile and run in CI.
 
 ## Deployment
+
 If you deploy on Vercel, connect the GitHub repo and add all environment variables in the Vercel dashboard. The deployment will fail without the required Stripe, auth, Algolia, and database values.
 
 ## Notes
+
 This repository is intended to show full-stack product work: auth, checkout, transactions, dashboard flows, and safer server-side handling.

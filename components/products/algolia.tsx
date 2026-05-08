@@ -41,7 +41,8 @@ export default function Algolia() {
           }}
         />
         <p className="mt-2 text-xs text-muted-foreground">
-          Search by product, type, or color. Hit <span className="font-medium">Esc</span> to close results.
+          Search by product, type, or color. Hit{" "}
+          <span className="font-medium">Esc</span> to close results.
         </p>
         <AnimatePresence>
           {active && (
@@ -102,22 +103,24 @@ function Hit({
           <div className="min-w-0 flex-1">
             <p
               className="truncate text-sm font-semibold"
-            dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(
-                hit._highlightResult.title.value || "",
-              ),
-            }}
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(
+                  hit._highlightResult.title.value || "",
+                ),
+              }}
             />
             <p
               className="truncate text-xs text-muted-foreground"
-            dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(
-                hit._highlightResult.productType.value || "",
-              ),
-            }}
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(
+                  hit._highlightResult.productType.value || "",
+                ),
+              }}
             />
           </div>
-          <p className="rounded-full bg-secondary px-3 py-1 text-sm font-medium">{formatPrice(hit.price)}</p>
+          <p className="rounded-full bg-secondary px-3 py-1 text-sm font-medium">
+            {formatPrice(hit.price)}
+          </p>
         </div>
       </Link>
     </div>
