@@ -13,6 +13,7 @@ import Reviews from "@/components/reviews/reviews";
 import { getReviewAverage } from "@/lib/getReviewAverage";
 import Stars from "@/components/reviews/stars";
 import AddToCartButton from "@/components/cart/add-cart";
+import { Badge } from "@/components/ui/badge";
 
 export async function generateStaticParams() {
   const data = await db.query.productVariants.findMany({
@@ -76,9 +77,20 @@ export default async function Page({
               />
             </div>
             <Separator className="my-2" />
-            <p className="text-2xl font-medium py-2">
-              {formatedPrice(variant.product.price)}
-            </p>
+            <div className="flex flex-wrap items-center gap-3 py-2">
+              <p className="text-2xl font-medium">
+                {formatedPrice(variant.product.price)}
+              </p>
+              <Badge variant="secondary" className="rounded-full px-3 py-1">
+                {typeof variant.stock === "number"
+                  ? variant.stock > 10
+                    ? `${variant.stock} in stock`
+                    : variant.stock > 0
+                      ? `Low stock · ${variant.stock} left`
+                      : "Out of stock"
+                  : "Inventory tracked"}
+              </Badge>
+            </div>
             <div
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(variant.product.description || ""),

@@ -52,6 +52,15 @@ export default function Products({ variants }: productTypes) {
               <p className="mt-1 truncate text-sm text-muted-foreground">
                 {variant.productType}
               </p>
+              <p className="mt-2 inline-flex rounded-full border border-border/70 bg-background px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                {typeof variant.stock === "number"
+                  ? variant.stock > 10
+                    ? `${variant.stock} in stock`
+                    : variant.stock > 0
+                      ? `Low stock · ${variant.stock} left`
+                      : "Out of stock"
+                  : "Inventory tracked"}
+              </p>
               <p className="mt-3 text-xs uppercase tracking-[0.2em] text-muted-foreground/80">
                 Tap to view details
               </p>
