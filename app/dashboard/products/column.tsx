@@ -75,6 +75,12 @@ export const columns: ColumnDef<ProductColumn>[] = [
                   </TooltipTrigger>
                   <TooltipContent sideOffset={7}>
                     <p>{variant.productType}</p>
+                    <p className="text-xs text-muted-foreground">
+                      Stock:{" "}
+                      {typeof variant.stock === "number"
+                        ? variant.stock
+                        : "Not set"}
+                    </p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -95,6 +101,25 @@ export const columns: ColumnDef<ProductColumn>[] = [
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "stock",
+    header: "Total Stock",
+    cell: ({ row }) => {
+      const variants = row.getValue("variants") as variantWithImagesTags[];
+      const totalStock = variants.reduce((sum, variant) => {
+        return sum + (typeof variant.stock === "number" ? variant.stock : 0);
+      }, 0);
+      return (
+        <div className="font-medium">
+          {totalStock > 0 ? (
+            <span className="text-green-600">{totalStock}</span>
+          ) : (
+            <span className="text-red-600">Out of stock</span>
+          )}
         </div>
       );
     },

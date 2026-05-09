@@ -7,6 +7,7 @@ import {
 } from "../ui/card";
 import BackButton from "./back-button";
 import Socials from "./socials";
+
 type AuthCardProps = {
   children: React.ReactNode;
   cardtitle: string;
@@ -14,6 +15,7 @@ type AuthCardProps = {
   backButtonLabel: string;
   showSocials?: boolean;
 };
+
 const AuthCard = ({
   children,
   cardtitle,

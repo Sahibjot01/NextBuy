@@ -6,12 +6,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { db } from "@/server";
+import { auth } from "@/server/auth";
+import { redirect } from "next/navigation";
 import Sales from "./sales";
 import Revenue from "./revenue";
 
 export const revalidate = 0;
 
 export default async function Analytics() {
+  // Check authentication and admin role
+  const session = await auth();
+  if (!session || session.user.role !== "admin") {
+    redirect("/auth/login");
+  }
   //get all the orderproducts from db
   const totalOrders = await db.query.orderProducts.findMany({
     orderBy: (orderProducts, { desc }) => [desc(orderProducts.id)],

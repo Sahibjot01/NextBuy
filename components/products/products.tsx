@@ -22,7 +22,7 @@ export default function Products({ variants }: productTypes) {
       return variants.filter((variant) =>
         variant.variantTags.some((variantTag) => {
           return variantTag.tag.toLowerCase().trim() === tag.toLowerCase();
-        })
+        }),
       );
     }
     return variants;
@@ -48,7 +48,9 @@ export default function Products({ variants }: productTypes) {
           </div>
           <div className="mt-4 flex items-start justify-between gap-4">
             <div className="min-w-0 font-medium">
-              <h2 className="truncate text-lg font-semibold tracking-tight">{variant.product.title}</h2>
+              <h2 className="truncate text-lg font-semibold tracking-tight">
+                {variant.product.title}
+              </h2>
               <p className="mt-1 truncate text-sm text-muted-foreground">
                 {variant.productType}
               </p>
@@ -66,7 +68,10 @@ export default function Products({ variants }: productTypes) {
               </p>
             </div>
             <div>
-              <Badge className="rounded-full px-3 py-1 text-sm shadow-sm" variant={"secondary"}>
+              <Badge
+                className="rounded-full px-3 py-1 text-sm shadow-sm"
+                variant={"secondary"}
+              >
                 {formatPrice(variant.product.price)}
               </Badge>
             </div>

@@ -44,6 +44,7 @@ export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
       });
     },
   });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -106,21 +107,26 @@ export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
       }
     }
   };
+
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col gap-4 items-center justify-center"
-    >
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <PaymentElement className="w-full" />
       <AddressElement options={{ mode: "shipping" }} className="w-full" />
 
+      {errorMessage && (
+        <div className="p-3 bg-red-500/10 border border-red-500/20 rounded text-red-400 text-sm">
+          {errorMessage}
+        </div>
+      )}
+
       <Button
-        className="max-w-md w-full"
+        className="w-full"
         disabled={!stripe || !elements || isLoading}
       >
         {isLoading ? `Processing payment` : `Pay ${formatPrice(totalPrice)}`}
       </Button>
-      <p className="text-xs text-muted-foreground mt-2 text-center">
+
+      <p className="text-xs text-muted-foreground text-center">
         Payments are processed securely by{" "}
         <a
           href="https://stripe.com"
@@ -130,7 +136,7 @@ export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
         >
           Stripe
         </a>
-        .
+        . Your card details are never stored on our servers.
       </p>
     </form>
   );

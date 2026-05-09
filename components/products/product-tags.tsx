@@ -10,8 +10,8 @@ export default function ProductTags() {
   const tag = searchParams.get("tag");
 
   const setFilter = (tag: string) => {
-    if (tag) router.push(`?tag=${tag}`);
-    else router.push("/");
+    if (tag) router.push(`?tag=${tag}`, { scroll: false });
+    else router.push("/", { scroll: false });
   };
   return (
     <div className="flex my-4 gap-2 justify-center items-center">
@@ -19,7 +19,7 @@ export default function ProductTags() {
         onClick={() => setFilter("")}
         className={cn(
           "cursor-pointer text-sm bg-secondary-foreground hover:bg-black/75 hover:opacity-100",
-          !tag ? "opacity-100" : "opacity-50"
+          !tag ? "opacity-100" : "opacity-50",
         )}
       >
         All
@@ -28,7 +28,7 @@ export default function ProductTags() {
         onClick={() => setFilter("blue")}
         className={cn(
           "cursor-pointer text-sm bg-blue-500 hover:bg-blue-600 hover:opacity-100",
-          tag === "blue" ? "opacity-100" : "opacity-50"
+          tag === "blue" ? "opacity-100" : "opacity-50",
         )}
       >
         Blue
@@ -37,7 +37,7 @@ export default function ProductTags() {
         onClick={() => setFilter("pink")}
         className={cn(
           "cursor-pointer text-sm bg-pink-500 hover:bg-pink-600 hover:opacity-100",
-          tag === "pink" ? "opacity-100" : "opacity-50"
+          tag === "pink" ? "opacity-100" : "opacity-50",
         )}
       >
         Pink
@@ -46,7 +46,7 @@ export default function ProductTags() {
         onClick={() => setFilter("green")}
         className={cn(
           "cursor-pointer text-sm bg-green-500 hover:bg-green-600 hover:opacity-100",
-          tag === "green" ? "opacity-100" : "opacity-50"
+          tag === "green" ? "opacity-100" : "opacity-50",
         )}
       >
         Green

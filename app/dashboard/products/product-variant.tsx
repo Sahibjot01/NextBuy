@@ -28,7 +28,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { InputTags } from "./Input-tags";
 import VariantImages from "./VariantImages";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAction } from "next-safe-action/hooks";
 import { createVariant } from "@/server/action/add-variant";
 import { toast } from "sonner";
@@ -64,7 +64,7 @@ export default function ProductVariant({
   });
 
   //function to set form values if form is opened in edit state
-  const setEdit = () => {
+  const setEdit = useCallback(() => {
     if (!editMode) {
       form.reset();
       return;
@@ -76,9 +76,10 @@ export default function ProductVariant({
       form.setValue("color", variant.color);
       form.setValue("productID", variant.productID);
       form.setValue("productType", variant.productType);
+      form.setValue("stock", variant.stock ?? undefined);
       form.setValue(
         "tags",
-        variant.variantTags.map((value) => value.tag)
+        variant.variantTags.map((value) => value.tag),
       );
       form.setValue(
         "variantImages",
@@ -86,16 +87,16 @@ export default function ProductVariant({
           name: value.name,
           size: value.size,
           url: value.url,
-        }))
+        })),
       );
     }
-  };
+  }, [editMode, form, variant]);
 
   useEffect(() => {
     if (open) {
       setEdit();
     }
-  }, [open, variant]);
+  }, [open, setEdit]);
 
   const { execute, status } = useAction(createVariant, {
     onExecute() {
@@ -220,6 +221,31 @@ export default function ProductVariant({
                   <FormControl>
                     <InputTags {...field} onChange={(e) => field.onChange(e)} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="stock"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Stock Count</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Enter stock quantity"
+                      {...field}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value ? parseInt(e.target.value) : undefined,
+                        )
+                      }
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    How many units are available for this variant
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

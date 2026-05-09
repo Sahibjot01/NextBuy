@@ -2,6 +2,7 @@ import { auth } from "@/server/auth";
 import { BarChart, Package, PenBoxIcon, Settings, Truck } from "lucide-react";
 import { ReactNode } from "react";
 import { DashboardNav } from "@/components/navigation/dashboard-nav";
+import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({
   children,
@@ -9,6 +10,11 @@ export default async function DashboardLayout({
   children: ReactNode;
 }) {
   const session = await auth();
+  
+  // Redirect to login if not authenticated
+  if (!session) {
+    redirect("/auth/login");
+  }
   const userLinks = [
     { label: "Orders", path: "/dashboard/orders", icon: <Truck size={16} /> },
     {
